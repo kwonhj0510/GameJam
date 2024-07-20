@@ -12,10 +12,7 @@ public class StartBlack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (SceneManager.GetActiveScene().name == "Stage1KYH")
-        {
-            EnterBlack();
-        }
+        EnterBlack();
     }
     public void EnterBlack()
     {
