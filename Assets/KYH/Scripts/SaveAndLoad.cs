@@ -85,8 +85,4 @@ public class SaveAndLoad : MonoBehaviour
         // 저장된 씬으로 전환
         SceneManager.LoadScene(data.sceneName);
     }
-     void Update()
-    {
-        SaveData();
-    }
 }

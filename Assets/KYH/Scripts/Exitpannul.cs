@@ -6,9 +6,11 @@ public class Exitpannul : MonoBehaviour
 {
     bool IsShow = false;
     public GameObject panul;
+    SaveAndLoad SNL;
     // Start is called before the first frame update
     void Start()
     {
+        SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
         panul.SetActive(false);
     }
 
@@ -40,5 +42,12 @@ public class Exitpannul : MonoBehaviour
     public void QuitBtn()
     {
         Application.Quit();
+    }
+    public void LoadCheckPoint()
+    {
+        panul.SetActive(false);
+        Time.timeScale = 1f;
+        IsShow = false;
+        SNL.LoadData();
     }
 }

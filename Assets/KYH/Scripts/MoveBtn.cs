@@ -50,7 +50,7 @@ public class MoveBtn : MonoBehaviour
             {
                 if (a == 1)
                 {
-                    Debug.Log("awefawe");
+                    SceneManager.LoadScene("Tutorial");
                 }
                 else if (a == 0)
                 {

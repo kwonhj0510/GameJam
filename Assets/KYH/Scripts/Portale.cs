@@ -4,34 +4,24 @@ using UnityEngine;
 
 public class Portale : MonoBehaviour
 {
-    public bool IsPlayerTouched = false;
+    public SaveAndLoad SNL;
     // Start is called before the first frame update
     void Start()
     {
-        
+        SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.X))
-        {
-            if(IsPlayerTouched)
-            {
-                Debug.Log("a");
-            }
-        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            IsPlayerTouched = true;
+            SNL.SaveData();
         }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        IsPlayerTouched = false;
     }
 }
