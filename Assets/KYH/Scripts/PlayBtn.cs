@@ -40,9 +40,7 @@ public class PlayBtn : MonoBehaviour
     {
         if(IsTouchable)
         {
-            moveBtn.a = 0;
-            moveBtn.StartCoroutine(moveBtn.GetBack());
-            Debug.Log("Exited");
+            Application.Quit();
         }
     }
     public void SettingBtn()
