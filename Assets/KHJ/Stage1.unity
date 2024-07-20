@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 398352050}
   - component: {fileID: 398352049}
   - component: {fileID: 398352048}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -617,7 +617,7 @@ GameObject:
   - component: {fileID: 820796935}
   - component: {fileID: 820796936}
   - component: {fileID: 820796937}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -747,7 +747,7 @@ GameObject:
   - component: {fileID: 918703541}
   - component: {fileID: 918703542}
   - component: {fileID: 918703543}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -875,7 +875,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 969025892}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plats
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -914,7 +914,7 @@ GameObject:
   - component: {fileID: 1165501795}
   - component: {fileID: 1165501796}
   - component: {fileID: 1165501797}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1112,7 +1112,7 @@ GameObject:
   - component: {fileID: 1686905678}
   - component: {fileID: 1686905679}
   - component: {fileID: 1686905680}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1242,7 +1242,7 @@ GameObject:
   - component: {fileID: 1834582172}
   - component: {fileID: 1834582173}
   - component: {fileID: 1834582174}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1393,10 +1393,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2be1304cdae806e438bd053ccbb4ef72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shield: {fileID: 2077587189}
   moveSpeed: 3
   jumpPower: 7
   isJump: 0
   isDashing: 0
+  isShieldOn: 0
+  shieldDurability: 0
 --- !u!70 &1934477513
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1622,7 +1625,7 @@ GameObject:
   - component: {fileID: 2102100956}
   - component: {fileID: 2102100957}
   - component: {fileID: 2102100958}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
