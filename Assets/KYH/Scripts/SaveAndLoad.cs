@@ -99,8 +99,8 @@ public class SaveAndLoad : MonoBehaviour
         {
             Debug.Log("세이브 파일이 없습니다");
         }
-        string loadSoundjson = File.ReadAllText(SAVE_DATA_DIRECTORY + SAVE_SOUND_FILE_NAME);
-        sound = JsonUtility.FromJson<SoundVal>(loadSoundjson);
+        //string loadSoundjson = File.ReadAllText(SAVE_DATA_DIRECTORY + SAVE_SOUND_FILE_NAME);
+        //sound = JsonUtility.FromJson<SoundVal>(loadSoundjson);
         //Soundvalval.slider.value = sound.LocalBGSound;
         //Soundvalval.slider2.value = sound.LocalSEFSound;
     }
@@ -121,6 +121,6 @@ public class SaveAndLoad : MonoBehaviour
     }
     private void Update()
     {
-        SaveSoundData();
+        //SaveSoundData();
     }
 }
