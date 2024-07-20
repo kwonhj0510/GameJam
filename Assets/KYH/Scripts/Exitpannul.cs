@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Exitpannul : MonoBehaviour
 {
+    StartBlack StartBlack;
     PlayerController controller;
     bool IsShow = false;
     public GameObject panul;
@@ -12,6 +13,7 @@ public class Exitpannul : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartBlack = GameObject.Find("B_Img").GetComponent<StartBlack>();
         controller = GameObject.Find("Player").GetComponent<PlayerController>();
         SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
         panul.SetActive(false);
@@ -50,6 +52,12 @@ public class Exitpannul : MonoBehaviour
     }
     public void LoadCheckPoint()
     {
+        StartCoroutine(eefefe());
+    }
+    IEnumerator eefefe()
+    {
+        StartBlack.EnterBlack();
+        yield return new WaitForSeconds(0.5f);
         controller.isGameStart = true;
         panul.SetActive(false);
         SNL.data.timeScale = 1f;

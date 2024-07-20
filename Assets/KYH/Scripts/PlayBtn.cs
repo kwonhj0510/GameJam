@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayBtn : MonoBehaviour
 {
+    StartBlack StartBlack;
     public bool IsTouchable = false;
     public float M_speed = 6.0f;
     public MoveBtn moveBtn;
@@ -15,6 +16,7 @@ public class PlayBtn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartBlack = GameObject.Find("B_Img").GetComponent<StartBlack>();
         setting = GameObject.Find("Setting_Img").GetComponent<Setting>();
         moveBtn = GameObject.Find("Btn").GetComponent<MoveBtn>();
     }
@@ -29,6 +31,7 @@ public class PlayBtn : MonoBehaviour
     {
         if(IsTouchable)
         {
+            StartBlack.EnterBlack();
             moveBtn.a = 1;
             moveBtn.StartCoroutine(moveBtn.GetBack());
         }

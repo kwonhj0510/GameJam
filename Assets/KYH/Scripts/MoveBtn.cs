@@ -9,9 +9,11 @@ public class MoveBtn : MonoBehaviour
     public float M_speed = 6.0f;
     public Transform TargetMoveTransform,OriginalTransform;
     public int a = 0;
+    SaveAndLoad SNL;
     // Start is called before the first frame update
     void Start()
     {
+        SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
         playBtn = GameObject.Find("Click").GetComponent<PlayBtn>();
         StartCoroutine(Lerf());
     }
@@ -50,7 +52,7 @@ public class MoveBtn : MonoBehaviour
             {
                 if (a == 1)
                 {
-                    SceneManager.LoadScene("Tutorial");
+                    SceneManager.LoadScene(SNL.data.sceneName);
                 }
                 else if (a == 0)
                 {

@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 public class WarpPortal : MonoBehaviour
 {
     public SaveAndLoad SNL;
+    public StartBlack StartBlack;
     void Start()
     {
+        StartBlack = GameObject.Find("B_Img").GetComponent<StartBlack>();
         SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
     }
 
@@ -21,8 +23,14 @@ public class WarpPortal : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(currentSceneIndex + 1);
+            StartCoroutine(eefefe());
         }
+    }
+    IEnumerator eefefe()
+    {
+        StartBlack.EnterBlack();
+        yield return new WaitForSeconds(0.5f);
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex + 1);
     }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Portal
   - Warp
+  - Appear
   layers:
   - Default
   - TransparentFX

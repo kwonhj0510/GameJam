@@ -17,21 +17,38 @@ public class SaveData
     public float timeScale = 1;
 }
 
+[System.Serializable]
+public class SoundVal
+{
+    public float LocalBGSound = 1f;
+    public float LocalSEFSound = 1f;
+}
+
 public class SaveAndLoad : MonoBehaviour
 {
     public SaveData data = new SaveData();
+    public SoundVal sound = new SoundVal();
     private string SAVE_DATA_DIRECTORY;
     private string SAVE_FILE_NAME = "/SaveFile.txt";
+    private string SAVE_SOUND_FILE_NAME = "/SoundFlie.txt";
+    Sound Soundvalval;
+
+    private void Awake()
+    {
+        Soundvalval = GameObject.Find("Setting_Img").GetComponent<Sound>();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         SAVE_DATA_DIRECTORY = Application.dataPath + "/Saves/";
-
         if (!Directory.Exists(SAVE_DATA_DIRECTORY))
         {
-            SceneManager.LoadScene("CreateName");
-            Directory.CreateDirectory(SAVE_DATA_DIRECTORY);
+            if (SceneManager.GetActiveScene().name != "StartScene")
+            {
+                SceneManager.LoadScene("CreateName");
+                Directory.CreateDirectory(SAVE_DATA_DIRECTORY);
+            }
         }
         LoadData();
     }
@@ -53,6 +70,12 @@ public class SaveAndLoad : MonoBehaviour
         File.WriteAllText(SAVE_DATA_DIRECTORY + SAVE_FILE_NAME, json);
     }
 
+    public void SaveSoundData()
+    {
+        string json = JsonUtility.ToJson(sound);
+        File.WriteAllText(SAVE_DATA_DIRECTORY + SAVE_SOUND_FILE_NAME, json);
+    }
+
     public void LoadData()
     {
         // 게임 데이터 로드
@@ -71,6 +94,10 @@ public class SaveAndLoad : MonoBehaviour
         {
             Debug.Log("세이브 파일이 없습니다");
         }
+        string loadSoundjson = File.ReadAllText(SAVE_DATA_DIRECTORY + SAVE_SOUND_FILE_NAME);
+        sound = JsonUtility.FromJson<SoundVal>(loadSoundjson);
+        Soundvalval.slider.value = sound.LocalBGSound;
+        Soundvalval.slider2.value = sound.LocalSEFSound;
     }
 
     public void ResetData()
@@ -86,5 +113,9 @@ public class SaveAndLoad : MonoBehaviour
     {
         // 저장된 씬으로 전환
         SceneManager.LoadScene(data.sceneName);
+    }
+    private void Update()
+    {
+        SaveSoundData();
     }
 }
