@@ -32,9 +32,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigid;
     private Status status;
     private SpriteRenderer spriteRenderer;
+    [SerializeField] private CapsuleCollider2D capsuleCollider2D;
 
     public SaveAndLoad SNL;
     public AudioSource DashSef;
+
+    private readonly float rayDistance = 0.3f;
 
     private void Awake()
     {
@@ -53,6 +56,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (isGameStart == false) return;
+        Move();
         Filp();
         Jump();
         Dash();
@@ -61,22 +65,16 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDashing)
-            return;
-
-        movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime * SNL.data.timeScale;
-        transform.position = new Vector2(transform.position.x + movement.x, transform.position.y);
-
         if (rigid.velocity.y < 0) // 내려갈때만 스캔
         {
-            Vector2 leftRayOrigin = new Vector2(transform.position.x - spriteRenderer.bounds.extents.x, transform.position.y);
-            Vector2 rightRayOrigin = new Vector2(transform.position.x + spriteRenderer.bounds.extents.x, transform.position.y);
+            Vector2 leftRayOrigin = new Vector2(transform.position.x - capsuleCollider2D.bounds.extents.x,  transform.position.y - capsuleCollider2D.bounds.extents.y);
+            Vector2 rightRayOrigin = new Vector2(transform.position.x + capsuleCollider2D.bounds.extents.x, transform.position.y - capsuleCollider2D.bounds.extents.y);
 
-            Debug.DrawRay(leftRayOrigin, Vector3.down * 1f, new Color(0, 1, 0));
-            Debug.DrawRay(rightRayOrigin, Vector3.down * 1f, new Color(0, 1, 0));
+            Debug.DrawRay(leftRayOrigin, Vector3.down * rayDistance, new Color(0, 1, 0));
+            Debug.DrawRay(rightRayOrigin, Vector3.down * rayDistance, new Color(0, 1, 0));
 
-            RaycastHit2D leftRayHit = Physics2D.Raycast(leftRayOrigin, Vector3.down, 1f, LayerMask.GetMask("Plat"));
-            RaycastHit2D rightRayHit = Physics2D.Raycast(rightRayOrigin, Vector3.down, 1f, LayerMask.GetMask("Plat"));
+            RaycastHit2D leftRayHit = Physics2D.Raycast(leftRayOrigin, Vector3.down, rayDistance, LayerMask.GetMask("Plat"));
+            RaycastHit2D rightRayHit = Physics2D.Raycast(rightRayOrigin, Vector3.down, rayDistance, LayerMask.GetMask("Plat"));
 
             if (leftRayHit.collider != null || rightRayHit.collider != null)
             {
@@ -88,7 +86,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    private void Move()
+    {
+        movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime * SNL.data.timeScale;
+        transform.position = new Vector2(transform.position.x + movement.x, transform.position.y);
+    }
     private void Filp()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))

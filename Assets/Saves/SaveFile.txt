@@ -1,1 +1,1 @@
-{"LV":1,"HP":20,"MAXHP":20,"Coin":0,"sceneName":"OverWorld","PlayerName":"와샌즈","playerPosition":{"x":28.893211364746095,"y":-3.531049966812134,"z":0.0},"timeScale":0.0}
+{"LV":1,"HP":20,"MAXHP":20,"Coin":0,"sceneName":"OverWorld","PlayerName":"와샌즈","playerPosition":{"x":0,"y":-3.531049966812134,"z":0.0},"timeScale":1.0}
