@@ -4,7 +4,7 @@ public class CameraFollowYOnly : MonoBehaviour
 {
     public Transform player; // 플레이어의 Transform
     public float minX = -2f;
-    public float maxX = 10f;
+    public float maxX = 48f;
     void LateUpdate()
     {
         if (player != null)

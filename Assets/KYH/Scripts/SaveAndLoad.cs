@@ -14,6 +14,7 @@ public class SaveData
     public string sceneName;
     public string PlayerName;
     public Vector3 playerPosition;
+    public float timeScale = 1;
 }
 
 public class SaveAndLoad : MonoBehaviour
@@ -61,6 +62,7 @@ public class SaveAndLoad : MonoBehaviour
             data = JsonUtility.FromJson<SaveData>(loadJson);
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             player.transform.position = data.playerPosition;
+
 
             Debug.Log("로드 완료");
             Debug.Log(loadJson);

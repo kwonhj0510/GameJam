@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Exitpannul : MonoBehaviour
 {
@@ -22,13 +23,13 @@ public class Exitpannul : MonoBehaviour
             if(!IsShow)
             {
                 panul.SetActive(true);
-                Time.timeScale = 0f;
+                SNL.data.timeScale = 0;
                 IsShow = true;
             }
             else
             {
                 panul.SetActive(false);
-                Time.timeScale = 1f;
+                SNL.data.timeScale = 1f;
                 IsShow = false;
             }
         }
@@ -36,7 +37,7 @@ public class Exitpannul : MonoBehaviour
     public void Continue()
     {
         panul.SetActive(false);
-        Time.timeScale = 1f;
+        SNL.data.timeScale = 1f;
         IsShow = false;
     }
     public void QuitBtn()
@@ -46,8 +47,9 @@ public class Exitpannul : MonoBehaviour
     public void LoadCheckPoint()
     {
         panul.SetActive(false);
-        Time.timeScale = 1f;
+        SNL.data.timeScale = 1f;
         IsShow = false;
+        SceneManager.LoadScene(SNL.data.sceneName);
         SNL.LoadData();
     }
 }

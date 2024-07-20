@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class Setting : MonoBehaviour
 {
+    public SaveAndLoad SNL;
     public PlayBtn playBtn;
     public bool IsAppear = false;
     public Transform OriginalTransform;
@@ -12,6 +13,7 @@ public class Setting : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        SNL = GetComponent<SaveAndLoad>();
         playBtn = GameObject.Find("Click").GetComponent<PlayBtn>();
     }
 
