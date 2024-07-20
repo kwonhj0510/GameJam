@@ -3,29 +3,37 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     private Vector2 movement = Vector2.zero;
 
     [SerializeField] private GameObject shield;
+    [SerializeField] private Image img_Skil;
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 3;       //이동속도
     [SerializeField] private float jumpPower = 10;      //점프 힘
 
+
+
     [SerializeField] private bool isJump = false;
-    [SerializeField] private bool isDashing = false;
     [SerializeField] private bool isShieldOn = false;
+    [SerializeField] private bool isDashing;
+    [SerializeField] private bool isDie = false;
 
     [SerializeField] private float shieldDurability = 1500;    //보호막 내구도
+    [SerializeField] private float shieldCooldown = 3;      //보호막 재사용 대기시간
 
-    Rigidbody2D rigid;
+    private Rigidbody2D rigid;
+    private Status status;
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        status = GetComponent<Status>();
     }
 
     private void Start()
@@ -42,6 +50,9 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isDashing)
+            return;
+
         movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime;
 
         transform.position = new Vector2(transform.position.x + movement.x, transform.position.y);
@@ -79,16 +90,16 @@ public class PlayerController : MonoBehaviour
         {
             if (movement.x > 0)
             {
-                StartCoroutine(Dashhh(Vector3.right));
+                StartCoroutine(DashCoroutine(Vector3.right));
             }
             else if (movement.x < 0)
             {
-                StartCoroutine(Dashhh(Vector3.left));
+                StartCoroutine(DashCoroutine(Vector3.left));
             }
         }
     }
 
-    private IEnumerator Dashhh(Vector3 direction)
+    private IEnumerator DashCoroutine(Vector3 direction)
     {
         var target = transform.position + direction * 2;
         while (true)
@@ -105,18 +116,56 @@ public class PlayerController : MonoBehaviour
 
     private void OnShield()
     {
-        if(Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            if(!isShieldOn)
+            if (!isShieldOn)
             {
                 isShieldOn = true;
                 shield.SetActive(true);
             }
-            else if(isShieldOn)
+            else if (isShieldOn)
             {
                 isShieldOn = false;
                 shield.SetActive(false);
+                StartCoroutine(ShieldCoroutine());
             }
+
+            if (shieldDurability == 0)
+            {
+                shield.SetActive(false);
+
+            }
+        }
+    }
+
+    private IEnumerator ShieldCoroutine()
+    {
+        while(shieldCooldown > 1)
+        {
+            shieldCooldown -= Time.deltaTime;
+            img_Skil.fillAmount = (1 / shieldCooldown);
+            yield return new WaitForFixedUpdate();
+
+        }
+        shieldCooldown = 3;
+    }
+
+    private void Attack()
+    {
+        if (isShieldOn && Input.GetKeyDown(KeyCode.Space))
+        {
+
+        }
+    }
+
+    private void TakeDamage()
+    {
+        status.curHP--;
+
+        if (status.curHP <= 0)
+        {
+            isDie = true;
+            SceneManager.LoadScene("");
         }
     }
 }
