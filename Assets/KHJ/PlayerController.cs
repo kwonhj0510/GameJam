@@ -16,7 +16,8 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 3;       //이동속도
     [SerializeField] private float jumpPower = 10;      //점프 힘
-
+    [SerializeField] private float dashPower = 20;      //대쉬 힘
+    [SerializeField] private float dashDuration = 0.2f; //대쉬 지속 시간
 
 
     [SerializeField] private bool isJump = false;
@@ -29,11 +30,13 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rigid;
     private Status status;
+    private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         status = GetComponent<Status>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -43,6 +46,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        Filp();
         Jump();
         Dash();
         OnShield();
@@ -54,20 +58,39 @@ public class PlayerController : MonoBehaviour
             return;
 
         movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime;
-
         transform.position = new Vector2(transform.position.x + movement.x, transform.position.y);
 
-        if (rigid.velocity.y < 0) //내려갈떄만 스캔
+        if (rigid.velocity.y < 0) // 내려갈때만 스캔
         {
-            Debug.DrawRay(rigid.position, Vector3.down, new Color(0, 1, 0));
-            RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, Vector3.down, 1, LayerMask.GetMask("Plat"));
-            if (rayHit.collider != null)
+            Vector2 leftRayOrigin = new Vector2(transform.position.x - spriteRenderer.bounds.extents.x, transform.position.y);
+            Vector2 rightRayOrigin = new Vector2(transform.position.x + spriteRenderer.bounds.extents.x, transform.position.y);
+
+            Debug.DrawRay(leftRayOrigin, Vector3.down * 1f, new Color(0, 1, 0));
+            Debug.DrawRay(rightRayOrigin, Vector3.down * 1f, new Color(0, 1, 0));
+
+            RaycastHit2D leftRayHit = Physics2D.Raycast(leftRayOrigin, Vector3.down, 1f, LayerMask.GetMask("Plat"));
+            RaycastHit2D rightRayHit = Physics2D.Raycast(rightRayOrigin, Vector3.down, 1f, LayerMask.GetMask("Plat"));
+
+            if (leftRayHit.collider != null || rightRayHit.collider != null)
             {
-                if (rayHit.distance < 0.5f)
+                if ((leftRayHit.collider != null && leftRayHit.distance < 1f) || (rightRayHit.collider != null && rightRayHit.distance < 1f))
                 {
                     isJump = false;
                 }
             }
+        }
+    }
+
+
+    private void Filp()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            spriteRenderer.flipX = false;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            spriteRenderer.flipX = true;
         }
     }
 
@@ -88,84 +111,76 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (movement.x > 0)
-            {
-                StartCoroutine(DashCoroutine(Vector3.right));
-            }
-            else if (movement.x < 0)
-            {
-                StartCoroutine(DashCoroutine(Vector3.left));
-            }
-        }
-    }
 
-    private IEnumerator DashCoroutine(Vector3 direction)
-    {
-        var target = transform.position + direction * 2;
-        while (true)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, target, 0.3f);
-            if (Vector3.Distance(transform.position, target) <= 0.5f)
-            {
-                yield break;
-            }
-            yield return new WaitForSeconds(0.01f);
+            StartCoroutine(DashCoroutine());
 
         }
     }
 
-    private void OnShield()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
+        private IEnumerator DashCoroutine()
         {
-            if (!isShieldOn)
+            isDashing = true;
+            Vector2 dashDirection = spriteRenderer.flipX ? Vector2.left : Vector2.right;
+            rigid.velocity = dashDirection * dashPower;
+
+            yield return new WaitForSeconds(dashDuration);
+
+            rigid.velocity = Vector2.zero;
+            isDashing = false;
+        }
+
+        private void OnShield()
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
             {
-                isShieldOn = true;
-                shield.SetActive(true);
-            }
-            else if (isShieldOn)
-            {
-                isShieldOn = false;
-                shield.SetActive(false);
-                StartCoroutine(ShieldCoroutine());
+                if (!isShieldOn)
+                {
+                    isShieldOn = true;
+                    shield.SetActive(true);
+                }
+                else if (isShieldOn)
+                {
+                    isShieldOn = false;
+                    shield.SetActive(false);
+                    StartCoroutine(ShieldCoroutine());
+
             }
 
             if (shieldDurability == 0)
+                {
+                    shield.SetActive(false);
+                }
+            }
+        }
+
+        private IEnumerator ShieldCoroutine()
+        {
+            while (shieldCooldown > 1)
             {
-                shield.SetActive(false);
+                shieldCooldown -= Time.deltaTime;
+                img_Skil.fillAmount = (1 / shieldCooldown);
+                yield return new WaitForFixedUpdate();
+
+            }
+            shieldCooldown = 3;
+        }
+
+        private void Attack()
+        {
+            if (isShieldOn && Input.GetKeyDown(KeyCode.Space))
+            {
 
             }
         }
-    }
 
-    private IEnumerator ShieldCoroutine()
-    {
-        while(shieldCooldown > 1)
+        private void TakeDamage()
         {
-            shieldCooldown -= Time.deltaTime;
-            img_Skil.fillAmount = (1 / shieldCooldown);
-            yield return new WaitForFixedUpdate();
+            status.curHP--;
 
-        }
-        shieldCooldown = 3;
-    }
-
-    private void Attack()
-    {
-        if (isShieldOn && Input.GetKeyDown(KeyCode.Space))
-        {
-
+            if (status.curHP <= 0)
+            {
+                isDie = true;
+                SceneManager.LoadScene("");
+            }
         }
     }
-
-    private void TakeDamage()
-    {
-        status.curHP--;
-
-        if (status.curHP <= 0)
-        {
-            isDie = true;
-            SceneManager.LoadScene("");
-        }
-    }
-}
