@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float shieldDurability = 1500;    //보호막 내구도
     [SerializeField] private float shieldCooldown = 3;      //보호막 재사용 대기시간
+    [SerializeField] private int enemyCount = 0;
 
     private Rigidbody2D rigid;
     private Status status;
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
 
     public SaveAndLoad SNL;
     public AudioSource DashSef;
+    private StartBlack startBlack;
 
     private readonly float rayDistance = 0.3f;
     private int dashCount = 0;
@@ -57,6 +59,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         shield.SetActive(false);
+        startBlack = GameObject.Find("B_Img").GetComponent<StartBlack>();
+
     }
 
     private void Update()
@@ -148,7 +152,6 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DashCoroutine()
     {
-        Debug.Log(dashCount);
         isDashing = true;
         dashCount++;
         Vector2 dashDirection = spriteRenderer.flipX ? Vector2.left : Vector2.right;
@@ -212,6 +215,9 @@ public class PlayerController : MonoBehaviour
     {
         if (isDashing && isShieldOn && collision.gameObject.CompareTag("Enemy"))
         {
+            StartCoroutine(ShieldCoolDown());
+            isShieldOn = false;
+            shield.SetActive(false);
             DealDamage(collision.gameObject);
         }
     }
@@ -223,9 +229,22 @@ public class PlayerController : MonoBehaviour
         if (enemyStatus != null)
         {
             enemyStatus.TakeDamage(10); // Damage value can be adjusted
+            enemyCount++;
+        }
+        if(enemyCount >=3)
+        {
+            StartCoroutine(GOBoss());
         }
     }
 
+    private IEnumerator GOBoss()
+    {
+        yield return new WaitForSeconds(1f);
+        startBlack.IsAppear = true;
+        startBlack.EnterBlack();
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene("Stage1KYH");
+    }
     private void TakeDamage()
     {
         status.curHP--;

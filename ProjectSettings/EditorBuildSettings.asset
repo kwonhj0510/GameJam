@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/KYH/OverWorld.unity
     guid: d668e70e38cda4544b156e44dd770ed9
+  - enabled: 1
+    path: Assets/KYH/Stage1KYH.unity
+    guid: 3f8bcfcd434e96246b8a37bc1a1df578
   m_configObjects: {}

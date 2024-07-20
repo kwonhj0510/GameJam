@@ -11,7 +11,7 @@ public class StartBlack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EnterBlack();
+        //EnterBlack();
     }
     public void EnterBlack()
     {
