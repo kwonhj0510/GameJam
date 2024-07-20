@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/KYH/StartScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/KYH/CreateName.unity
+    guid: 05fc14f1e32803b45aea716045a81c0a
+  - enabled: 1
+    path: Assets/KYH/Tutorial.unity
+    guid: 8c0b320e9c8cdad4692cc0f46fff29b5
   m_configObjects: {}
