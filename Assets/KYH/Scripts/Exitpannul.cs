@@ -13,9 +13,9 @@ public class Exitpannul : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartBlack = GameObject.Find("b_img").GetComponent<StartBlack>();
-        //controller = GameObject.Find("player").GetComponent<PlayerController>();
-        //SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
+        StartBlack = GameObject.Find("B_Img").GetComponent<StartBlack>();
+        controller = GameObject.Find("Player").GetComponent<PlayerController>();
+        SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
         panul.SetActive(false);
     }
 
@@ -26,14 +26,14 @@ public class Exitpannul : MonoBehaviour
         {
             if(!IsShow)
             {
-                controller.isGameStart = false;
+                //controller.isGameStart = false;
                 panul.SetActive(true);
                 SNL.data.timeScale = 0;
                 IsShow = true;
             }
             else
             {
-                controller.isGameStart = true;
+                //controller.isGameStart = true;
                 panul.SetActive(false);
                 SNL.data.timeScale = 1f;
                 IsShow = false;
@@ -48,6 +48,7 @@ public class Exitpannul : MonoBehaviour
     }
     public void QuitBtn()
     {
+        SNL.data.timeScale = 0f;
         Application.Quit();
     }
     public void LoadCheckPoint()
@@ -58,7 +59,7 @@ public class Exitpannul : MonoBehaviour
     {
         StartBlack.EnterBlack();
         yield return new WaitForSeconds(0.5f);
-        controller.isGameStart = true;
+        //controller.isGameStart = true;
         panul.SetActive(false);
         SNL.data.timeScale = 1f;
         IsShow = false;

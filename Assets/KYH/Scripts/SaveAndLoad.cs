@@ -32,6 +32,7 @@ public class SaveAndLoad : MonoBehaviour
     private string SAVE_FILE_NAME = "/SaveFile.txt";
     private string SAVE_SOUND_FILE_NAME = "/SoundFlie.txt";
     Sound Soundvalval;
+    public bool ISSaveNotCreated = false;
 
     private void Awake()
     {
@@ -44,6 +45,7 @@ public class SaveAndLoad : MonoBehaviour
         SAVE_DATA_DIRECTORY = Application.dataPath + "/Saves/";
         if (!Directory.Exists(SAVE_DATA_DIRECTORY))
         {
+            ISSaveNotCreated = true;
             if (SceneManager.GetActiveScene().name != "StartScene")
             {
                 SceneManager.LoadScene("CreateName");
@@ -51,6 +53,10 @@ public class SaveAndLoad : MonoBehaviour
             }
         }
         LoadData();
+    }
+    public void CreateDir()
+    {
+        Directory.CreateDirectory(SAVE_DATA_DIRECTORY);
     }
 
     public void SaveData()
@@ -85,7 +91,6 @@ public class SaveAndLoad : MonoBehaviour
             data = JsonUtility.FromJson<SaveData>(loadJson);
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             player.transform.position = data.playerPosition;
-
 
             Debug.Log("로드 완료");
             Debug.Log(loadJson);

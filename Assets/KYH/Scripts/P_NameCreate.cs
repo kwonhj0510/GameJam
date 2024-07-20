@@ -17,8 +17,9 @@ public class P_NameCreate : MonoBehaviour
     public void TextDone()
     {
         SNL.data.PlayerName = InputField.text;
-        SceneManager.LoadScene("Tutorial");
         SNL.data.playerPosition = new Vector3(-8.27f, -3.65f, 0);
+        SNL.SaveData();
+        SceneManager.LoadScene("Tutorial");
         SNL.SaveData();
     }
 }

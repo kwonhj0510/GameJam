@@ -52,7 +52,15 @@ public class MoveBtn : MonoBehaviour
             {
                 if (a == 1)
                 {
-                    SceneManager.LoadScene(SNL.data.sceneName);
+                    if (SNL.ISSaveNotCreated)
+                    {
+                        SceneManager.LoadScene("CreateName");
+                        SNL.CreateDir();
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene(SNL.data.sceneName);
+                    }
                 }
                 else if (a == 0)
                 {
