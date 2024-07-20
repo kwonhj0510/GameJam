@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class Exitpannul : MonoBehaviour
 {
+    PlayerController controller;
     bool IsShow = false;
     public GameObject panul;
     SaveAndLoad SNL;
     // Start is called before the first frame update
     void Start()
     {
+        controller = GameObject.Find("Player").GetComponent<PlayerController>();
         SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
         panul.SetActive(false);
     }
@@ -22,12 +24,14 @@ public class Exitpannul : MonoBehaviour
         {
             if(!IsShow)
             {
+                controller.isGameStart = false;
                 panul.SetActive(true);
                 SNL.data.timeScale = 0;
                 IsShow = true;
             }
             else
             {
+                controller.isGameStart = true;
                 panul.SetActive(false);
                 SNL.data.timeScale = 1f;
                 IsShow = false;
@@ -46,6 +50,7 @@ public class Exitpannul : MonoBehaviour
     }
     public void LoadCheckPoint()
     {
+        controller.isGameStart = true;
         panul.SetActive(false);
         SNL.data.timeScale = 1f;
         IsShow = false;

@@ -1162,6 +1162,7 @@ MonoBehaviour:
     sceneName: 
     PlayerName: 
     playerPosition: {x: 0, y: 0, z: 0}
+    timeScale: 1
 --- !u!4 &14191965
 Transform:
   m_ObjectHideFlags: 0
@@ -5595,13 +5596,17 @@ MonoBehaviour:
   img_Skil: {fileID: 0}
   moveSpeed: 3
   jumpPower: 7
+  dashPower: 20
+  dashDuration: 0.2
   isJump: 0
   isShieldOn: 0
   isDashing: 0
   isDie: 0
+  isGameStart: 1
   shieldDurability: 1500
   shieldCooldown: 3
-  DashSEF: {fileID: 0}
+  SNL: {fileID: 0}
+  DashSef: {fileID: 0}
 --- !u!70 &1385096394
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

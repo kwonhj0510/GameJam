@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool isShieldOn = false;
     [SerializeField] private bool isDashing;
     [SerializeField] private bool isDie = false;
+    [SerializeField] public bool isGameStart = true;
 
     [SerializeField] private float shieldDurability = 1500;    //보호막 내구도
     [SerializeField] private float shieldCooldown = 3;      //보호막 재사용 대기시간
@@ -32,8 +33,13 @@ public class PlayerController : MonoBehaviour
     private Status status;
     private SpriteRenderer spriteRenderer;
 
+    public SaveAndLoad SNL;
+    public AudioSource DashSef;
+
     private void Awake()
     {
+        SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
+        DashSef = GetComponents<AudioSource>()[0];
         rigid = GetComponent<Rigidbody2D>();
         status = GetComponent<Status>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -46,6 +52,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (isGameStart == false) return;
         Filp();
         Jump();
         Dash();
@@ -57,7 +64,7 @@ public class PlayerController : MonoBehaviour
         if (isDashing)
             return;
 
-        movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime;
+        movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime * SNL.data.timeScale;
         transform.position = new Vector2(transform.position.x + movement.x, transform.position.y);
 
         if (rigid.velocity.y < 0) // 내려갈때만 스캔
