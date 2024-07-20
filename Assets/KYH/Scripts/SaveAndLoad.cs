@@ -14,7 +14,6 @@ public class SaveData
     public string sceneName;
     public string PlayerName;
     public Vector3 playerPosition;
-    public bool Save = false;
 }
 
 public class SaveAndLoad : MonoBehaviour
@@ -43,7 +42,7 @@ public class SaveAndLoad : MonoBehaviour
 
         // 플레이어 위치 저장
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (data.Save && player != null)
+        if (player != null)
         {
             data.playerPosition = player.transform.position;
         }
@@ -60,6 +59,8 @@ public class SaveAndLoad : MonoBehaviour
         {
             string loadJson = File.ReadAllText(SAVE_DATA_DIRECTORY + SAVE_FILE_NAME);
             data = JsonUtility.FromJson<SaveData>(loadJson);
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            player.transform.position = data.playerPosition;
 
             Debug.Log("로드 완료");
             Debug.Log(loadJson);
@@ -84,7 +85,7 @@ public class SaveAndLoad : MonoBehaviour
         // 저장된 씬으로 전환
         SceneManager.LoadScene(data.sceneName);
     }
-    private void Update()
+     void Update()
     {
         SaveData();
     }

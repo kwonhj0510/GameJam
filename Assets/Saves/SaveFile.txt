@@ -1,1 +1,1 @@
-{"LV":1,"HP":20,"MAXHP":20,"Coin":0,"sceneName":"Tutorial","PlayerName":"ㄷㄹ먀ㅐㅜ","playerPosition":{"x":0.0,"y":0.0,"z":0.0},"Save":false}
+{"LV":1,"HP":20,"MAXHP":20,"Coin":0,"sceneName":"Tutorial","PlayerName":"ㄷㄹ먀ㅐㅜ","playerPosition":{"x":43.6326904296875,"y":-3.916975736618042,"z":0.0}}
