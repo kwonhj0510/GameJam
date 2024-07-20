@@ -21,7 +21,6 @@ public class PlayerOneWayPlatForm : MonoBehaviour
         {
             if (currentOneWayPlatfrom != null)
             {
-                Debug.Log("ÂïÇú¾û");
                 StartCoroutine(DisableCollision());
             }
         }

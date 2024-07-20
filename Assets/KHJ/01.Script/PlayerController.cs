@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
     {
         if (rigid.velocity.y < 0) // 내려갈때만 스캔
         {
-            Vector2 leftRayOrigin = new Vector2(transform.position.x - capsuleCollider2D.bounds.extents.x,  transform.position.y - capsuleCollider2D.bounds.extents.y);
+            Vector2 leftRayOrigin = new Vector2(transform.position.x - capsuleCollider2D.bounds.extents.x, transform.position.y - capsuleCollider2D.bounds.extents.y);
             Vector2 rightRayOrigin = new Vector2(transform.position.x + capsuleCollider2D.bounds.extents.x, transform.position.y - capsuleCollider2D.bounds.extents.y);
 
             Debug.DrawRay(leftRayOrigin, Vector3.down * rayDistance, new Color(0, 1, 0));
@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
     {
         movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime * SNL.data.timeScale;
         transform.position = new Vector2(transform.position.x + movement.x, transform.position.y);
-        if(movement.x == 0)
+        if (movement.x == 0)
         {
             animator.SetBool("isRun", false);
         }
@@ -162,57 +162,61 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnShield()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (!isShieldOn)
             {
-                if (!isShieldOn)
+                if (shieldCooldown < 3)
                 {
-                    isShieldOn = true;
-                    shield.SetActive(true);
+                    return;
                 }
-                else if (isShieldOn)
-                {
-                    isShieldOn = false;
-                    shield.SetActive(false);
-                    StartCoroutine(ShieldCoroutine());
+                isShieldOn = true;
+                shield.SetActive(true);
+            }
+            else if (isShieldOn)
+            {
+                isShieldOn = false;
+                shield.SetActive(false);
+                StartCoroutine(ShieldCoolDown());
 
             }
 
             if (shieldDurability == 0)
-                {
-                    shield.SetActive(false);
-                }
-            }
-        }
-
-        private IEnumerator ShieldCoroutine()
-        {
-            while (shieldCooldown > 1)
             {
-                shieldCooldown -= Time.deltaTime;
-                img_Skil.fillAmount = (1 / shieldCooldown);
-                yield return new WaitForFixedUpdate();
-
-            }
-            shieldCooldown = 3;
-        }
-
-        private void Attack()
-        {
-            if (isShieldOn && Input.GetKeyDown(KeyCode.Space))
-            {
-                
-            }
-        }
-
-        private void TakeDamage()
-        {
-            status.curHP--;
-
-            if (status.curHP <= 0)
-            {
-                isDie = true;
-                SceneManager.LoadScene("");
+                shield.SetActive(false);
             }
         }
     }
+
+    private IEnumerator ShieldCoolDown()
+    {
+        while (shieldCooldown > 1)
+        {
+            shieldCooldown -= Time.deltaTime;
+            img_Skil.fillAmount = (1 / shieldCooldown);
+            yield return new WaitForFixedUpdate();
+
+        }
+        shieldCooldown = 3;
+    }
+
+    private void Attack()
+    {
+        if (isShieldOn && Input.GetKeyDown(KeyCode.Space))
+        {
+
+        }
+    }
+
+    private void TakeDamage()
+    {
+        status.curHP--;
+
+        if (status.curHP <= 0)
+        {
+            isDie = true;
+            SceneManager.LoadScene("");
+        }
+    }
+}
