@@ -1,1 +1,1 @@
-{"LV":1,"HP":20,"MAXHP":20,"Coin":0,"sceneName":"OverWorld","PlayerName":"와샌쥬","playerPosition":{"x":0,"y":-3.9082586765289308,"z":0.0},"timeScale":1.0}
+{"LV":1,"HP":20,"MAXHP":20,"Coin":0,"sceneName":"OverWorld","PlayerName":"권현준","playerPosition":{"x":29.987728118896486,"y":-3.907001256942749,"z":0.0},"timeScale":1.0}
