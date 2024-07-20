@@ -16,7 +16,8 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 3;       //이동속도
     [SerializeField] private float jumpPower = 10;      //점프 힘
-
+    [SerializeField] private float dashPower = 20;      //대쉬 힘
+    [SerializeField] private float dashDuration = 0.2f; //대쉬 지속 시간
 
 
     [SerializeField] private bool isJump = false;
@@ -83,7 +84,7 @@ public class PlayerController : MonoBehaviour
 
     private void Filp()
     {
-        if(Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             spriteRenderer.flipX = false;
         }
@@ -110,83 +111,76 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (movement.x > 0)
-            {
-                StartCoroutine(DashCoroutine(Vector3.right));
-            }
-            else if (movement.x < 0)
-            {
-                StartCoroutine(DashCoroutine(Vector3.left));
-            }
-        }
-    }
 
-    private IEnumerator DashCoroutine(Vector3 direction)
-    {
-        var target = transform.position + direction * 2;
-        while (true)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, target, 0.3f);
-            if (Vector3.Distance(transform.position, target) <= 0.5f)
-            {
-                yield break;
-            }
-            yield return new WaitForSeconds(0.01f);
+            StartCoroutine(DashCoroutine());
 
         }
     }
 
-    private void OnShield()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
+        private IEnumerator DashCoroutine()
         {
-            if (!isShieldOn)
+            isDashing = true;
+            Vector2 dashDirection = spriteRenderer.flipX ? Vector2.left : Vector2.right;
+            rigid.velocity = dashDirection * dashPower;
+
+            yield return new WaitForSeconds(dashDuration);
+
+            rigid.velocity = Vector2.zero;
+            isDashing = false;
+        }
+
+        private void OnShield()
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
             {
-                isShieldOn = true;
-                shield.SetActive(true);
-            }
-            else if (isShieldOn)
-            {
-                isShieldOn = false;
-                shield.SetActive(false);
+                if (!isShieldOn)
+                {
+                    isShieldOn = true;
+                    shield.SetActive(true);
+                }
+                else if (isShieldOn)
+                {
+                    isShieldOn = false;
+                    shield.SetActive(false);
+                    StartCoroutine(ShieldCoroutine());
+
             }
 
             if (shieldDurability == 0)
+                {
+                    shield.SetActive(false);
+                }
+            }
+        }
+
+        private IEnumerator ShieldCoroutine()
+        {
+            while (shieldCooldown > 1)
             {
-                shield.SetActive(false);
-                StartCoroutine(ShieldCoroutine());
+                shieldCooldown -= Time.deltaTime;
+                img_Skil.fillAmount = (1 / shieldCooldown);
+                yield return new WaitForFixedUpdate();
+
+            }
+            shieldCooldown = 3;
+        }
+
+        private void Attack()
+        {
+            if (isShieldOn && Input.GetKeyDown(KeyCode.Space))
+            {
+
+            }
+        }
+
+        private void TakeDamage()
+        {
+            status.curHP--;
+
+            if (status.curHP <= 0)
+            {
+                isDie = true;
+                SceneManager.LoadScene("");
             }
         }
     }
-
-    private IEnumerator ShieldCoroutine()
-    {
-        while(shieldCooldown > 1)
-        {
-            shieldCooldown -= Time.deltaTime;
-            img_Skil.fillAmount = (1 / shieldCooldown);
-            yield return new WaitForFixedUpdate();
-
-        }
-        shieldCooldown = 3;
-    }
-
-    private void Attack()
-    {
-        if (isShieldOn && Input.GetKeyDown(KeyCode.Space))
-        {
-
-        }
-    }
-
-    private void TakeDamage()
-    {
-        status.curHP--;
-
-        if (status.curHP <= 0)
-        {
-            isDie = true;
-            SceneManager.LoadScene("");
-        }
-    }
-}
