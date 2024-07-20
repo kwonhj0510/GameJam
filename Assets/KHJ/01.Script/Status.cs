@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Status : MonoBehaviour
 {
-    [SerializeField] private int maxHP;
+    [SerializeField] private int maxHP = 100;
     [SerializeField] public int curHP;
 
     private void Awake()
     {
         curHP = maxHP;
     }
+    
 }

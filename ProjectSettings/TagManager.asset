@@ -8,6 +8,7 @@ TagManager:
   - Warp
   - OneWayPlatform
   - OnWayPlatform
+  - Enemy
   layers:
   - Default
   - TransparentFX

@@ -96,8 +96,8 @@ public class SaveAndLoad : MonoBehaviour
         }
         string loadSoundjson = File.ReadAllText(SAVE_DATA_DIRECTORY + SAVE_SOUND_FILE_NAME);
         sound = JsonUtility.FromJson<SoundVal>(loadSoundjson);
-        Soundvalval.slider.value = sound.LocalBGSound;
-        Soundvalval.slider2.value = sound.LocalSEFSound;
+        //Soundvalval.slider.value = sound.LocalBGSound;
+        //Soundvalval.slider2.value = sound.LocalSEFSound;
     }
 
     public void ResetData()

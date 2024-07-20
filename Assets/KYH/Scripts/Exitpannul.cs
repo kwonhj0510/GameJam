@@ -13,9 +13,9 @@ public class Exitpannul : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartBlack = GameObject.Find("B_Img").GetComponent<StartBlack>();
-        controller = GameObject.Find("Player").GetComponent<PlayerController>();
-        SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
+        //StartBlack = GameObject.Find("b_img").GetComponent<StartBlack>();
+        //controller = GameObject.Find("player").GetComponent<PlayerController>();
+        //SNL = GameObject.Find("Click").GetComponent<SaveAndLoad>();
         panul.SetActive(false);
     }
 

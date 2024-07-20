@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool isDashing;
     [SerializeField] private bool isDie = false;
     [SerializeField] public bool isGameStart = true;
+    [SerializeField] private bool isRun = false;
 
     [SerializeField] private float shieldDurability = 1500;    //보호막 내구도
     [SerializeField] private float shieldCooldown = 3;      //보호막 재사용 대기시간
@@ -98,10 +99,12 @@ public class PlayerController : MonoBehaviour
         if (movement.x == 0)
         {
             animator.SetBool("isRun", false);
+            isRun = false;
         }
         else
         {
             animator.SetBool("isRun", true);
+            isRun = true;
         }
     }
     private void Filp()
@@ -131,11 +134,15 @@ public class PlayerController : MonoBehaviour
 
     private void Dash()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!isRun) return;
+        else
         {
-            DashSef.Play();
-            StartCoroutine(DashCoroutine());
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                DashSef.Play();
+                StartCoroutine(DashCoroutine());
 
+            }
         }
     }
 
@@ -201,11 +208,21 @@ public class PlayerController : MonoBehaviour
         shieldCooldown = 3;
     }
 
-    private void Attack()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isShieldOn && Input.GetKeyDown(KeyCode.Space))
+        if (isDashing && isShieldOn && collision.gameObject.CompareTag("Enemy"))
         {
+            DealDamage(collision.gameObject);
+        }
+    }
 
+    private void DealDamage(GameObject enemy)
+    {
+        // Assuming enemy has a script with a method to take damage
+        var enemyStatus = enemy.GetComponent<EnemyStatus>();
+        if (enemyStatus != null)
+        {
+            enemyStatus.TakeDamage(10); // Damage value can be adjusted
         }
     }
 
