@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpPower = 10;      //점프 힘
     [SerializeField] private float dashPower = 20;      //대쉬 힘
     [SerializeField] private float dashDuration = 0.2f; //대쉬 지속 시간
+    [SerializeField] private float dashCooldown = 2f;   //대쉬 쿨타임
 
 
     [SerializeField] private bool isJump = false;
@@ -32,9 +33,15 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigid;
     private Status status;
     private SpriteRenderer spriteRenderer;
+    [SerializeField] private CapsuleCollider2D capsuleCollider2D;
+    private Animator animator;
 
     public SaveAndLoad SNL;
     public AudioSource DashSef;
+
+    private readonly float rayDistance = 0.3f;
+    private int dashCount = 0;
+    private bool dashOnCooldown = false;
 
     private void Awake()
     {
@@ -43,6 +50,7 @@ public class PlayerController : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         status = GetComponent<Status>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -53,6 +61,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (isGameStart == false) return;
+        Move();
         Filp();
         Jump();
         Dash();
@@ -61,22 +70,16 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDashing)
-            return;
-
-        movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime * SNL.data.timeScale;
-        transform.position = new Vector2(transform.position.x + movement.x, transform.position.y);
-
         if (rigid.velocity.y < 0) // 내려갈때만 스캔
         {
-            Vector2 leftRayOrigin = new Vector2(transform.position.x - spriteRenderer.bounds.extents.x, transform.position.y);
-            Vector2 rightRayOrigin = new Vector2(transform.position.x + spriteRenderer.bounds.extents.x, transform.position.y);
+            Vector2 leftRayOrigin = new Vector2(transform.position.x - capsuleCollider2D.bounds.extents.x,  transform.position.y - capsuleCollider2D.bounds.extents.y);
+            Vector2 rightRayOrigin = new Vector2(transform.position.x + capsuleCollider2D.bounds.extents.x, transform.position.y - capsuleCollider2D.bounds.extents.y);
 
-            Debug.DrawRay(leftRayOrigin, Vector3.down * 1f, new Color(0, 1, 0));
-            Debug.DrawRay(rightRayOrigin, Vector3.down * 1f, new Color(0, 1, 0));
+            Debug.DrawRay(leftRayOrigin, Vector3.down * rayDistance, new Color(0, 1, 0));
+            Debug.DrawRay(rightRayOrigin, Vector3.down * rayDistance, new Color(0, 1, 0));
 
-            RaycastHit2D leftRayHit = Physics2D.Raycast(leftRayOrigin, Vector3.down, 1f, LayerMask.GetMask("Plat"));
-            RaycastHit2D rightRayHit = Physics2D.Raycast(rightRayOrigin, Vector3.down, 1f, LayerMask.GetMask("Plat"));
+            RaycastHit2D leftRayHit = Physics2D.Raycast(leftRayOrigin, Vector3.down, rayDistance, LayerMask.GetMask("Plat"));
+            RaycastHit2D rightRayHit = Physics2D.Raycast(rightRayOrigin, Vector3.down, rayDistance, LayerMask.GetMask("Plat"));
 
             if (leftRayHit.collider != null || rightRayHit.collider != null)
             {
@@ -88,7 +91,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    private void Move()
+    {
+        movement.x = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime * SNL.data.timeScale;
+        transform.position = new Vector2(transform.position.x + movement.x, transform.position.y);
+        if(movement.x == 0)
+        {
+            animator.SetBool("isRun", false);
+        }
+        else
+        {
+            animator.SetBool("isRun", true);
+        }
+    }
     private void Filp()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -118,25 +133,35 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
+            DashSef.Play();
             StartCoroutine(DashCoroutine());
 
         }
     }
 
-        private IEnumerator DashCoroutine()
+    private IEnumerator DashCoroutine()
+    {
+        Debug.Log(dashCount);
+        isDashing = true;
+        dashCount++;
+        Vector2 dashDirection = spriteRenderer.flipX ? Vector2.left : Vector2.right;
+        rigid.velocity = dashDirection * dashPower;
+
+        yield return new WaitForSeconds(dashDuration);
+
+        rigid.velocity = Vector2.zero;
+        isDashing = false;
+
+        if (dashCount >= 5)
         {
-            isDashing = true;
-            Vector2 dashDirection = spriteRenderer.flipX ? Vector2.left : Vector2.right;
-            rigid.velocity = dashDirection * dashPower;
-
-            yield return new WaitForSeconds(dashDuration);
-
-            rigid.velocity = Vector2.zero;
-            isDashing = false;
+            dashOnCooldown = true;
+            dashCount = 0;
+            yield return new WaitForSeconds(dashCooldown);
+            dashOnCooldown = false;
         }
+    }
 
-        private void OnShield()
+    private void OnShield()
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
@@ -176,7 +201,7 @@ public class PlayerController : MonoBehaviour
         {
             if (isShieldOn && Input.GetKeyDown(KeyCode.Space))
             {
-
+                
             }
         }
 
