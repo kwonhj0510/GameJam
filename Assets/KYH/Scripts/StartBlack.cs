@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StartBlack : MonoBehaviour
 {
@@ -11,7 +12,10 @@ public class StartBlack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //EnterBlack();
+        if (SceneManager.GetActiveScene().name == "Stage1KYH")
+        {
+            EnterBlack();
+        }
     }
     public void EnterBlack()
     {

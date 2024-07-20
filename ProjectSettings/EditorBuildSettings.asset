@@ -20,6 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/KHJ/00.Scence/Stage1.unity
     guid: da55d09a673418a4db48f29cc257dc5d
+  - enabled: 1
     path: Assets/KYH/Stage1KYH.unity
     guid: 3f8bcfcd434e96246b8a37bc1a1df578
   m_configObjects: {}
